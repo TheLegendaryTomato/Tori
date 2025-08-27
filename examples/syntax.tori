@@ -1,0 +1,72 @@
+: Example of Tori's syntax
+: This file would work if ran, but it was mostly just created to
+: figure out the original version of the language. This also
+: means that the code may be outdated.
+
+: This code can also be found in [example-syntax.md] at the root
+: of the repo.
+
+: include library files
+include stdio.tori;
+
+: declaring variable
+var x, 10;
+
+: if statement
+if x == 10;
+	call write, "x is ten";
+elif x == 11;
+	call write, "x is eleven";
+else;
+	call write, "x is not ten or eleven"
+endif;
+
+: declaring function
+func add : int;
+	var x : int;
+	var y : int;
+	: Parameters are read in the order which they were sent in the
+	: `call` instruction
+	param x, y;
+
+	ret x+y;
+endfunc;
+
+: For the moment, this is how you get values returned from a
+: function. I personally don't want the syntax of
+: `var x : int = call add, 1, 2;`, so we have this instead. How
+: it works is that the `ret` instruction simply sets the value
+: of the variable passed in as the last parameter to whatever
+: came after it. So here, the value of `o` (the last parameter)
+: is set to `x+y`, which is what `add` returns.
+var o : int;
+call add, 1, 2, o;
+call write, o;
+
+func print : int, char str[];
+	var str[] : char;
+	param str;
+
+	call write, str;
+endfunc;
+
+: loops
+var tbl[] : int;
+var i : int = 0;
+for i < 10;
+	var out[] : char;
+	call itostr, i, out;
+	call write, out;
+
+	: variables need manually incremented
+	i = i++;
+endloop;
+
+i = 0;
+while i != 11;
+	var out[] : char;
+	call itostr, i, out;
+	call write, out;
+
+	i = i++;
+endloop;
