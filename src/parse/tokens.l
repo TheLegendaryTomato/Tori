@@ -3,6 +3,9 @@
 #include "syntax-no-main.tab.h"
 %}
 
+%option noyywrap
+%option yylineno
+
 IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 COMPARE "=="|"<="|">="|"!="
 
@@ -44,7 +47,8 @@ INT [0-9]+
 ";" return ';';
 "," return ',';
 
-[ \t\r\n]+ ;
+[ \t]+ ;
+[\r\n]+ { yylineno++; };
 .          ;
 
 %%

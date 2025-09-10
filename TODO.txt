@@ -1,0 +1,2 @@
+- create file src/README.(md ? txt) describing why there are src
+  and intrp folders, and what they contain

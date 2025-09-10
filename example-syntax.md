@@ -17,6 +17,8 @@
 - `bool`
 - `char`
 - `include` - to include other language files
+- `true`
+- `false`
 - `:` - signifies comments
 - `:* *:` - block comment?
 

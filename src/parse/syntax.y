@@ -1,8 +1,12 @@
 %{
 #include <stdio.h>
 
+#include "syntax.tab.h"
+
 int yylex(void);
 void yyerror(const char *s);
+
+extern int yylineno;
 %}
 
 // Bison declarations
@@ -62,5 +66,5 @@ int main() {
 }
 
 void yyerror(const char *s) {
-	fprintf(stderr, "Parse error: %s\n", s);
+	fprintf(stderr, "Syntax error (line %d): %s\n", yylineno, s);
 }

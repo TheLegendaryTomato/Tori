@@ -30,7 +30,6 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) syntax.tab.o lex.yy.o -o $(TARGET) -lfl
 
 clean:
-	@echo
 	rm -fr *.c
 	rm -fr *.h
 	rm -fr *.o

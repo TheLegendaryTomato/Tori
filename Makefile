@@ -56,7 +56,6 @@ $(PARSER_OBJS):
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
-	@echo
 	rm -fr build
 	rm -fr $(OBJS) $(DEPS)
 	make clean -C src/parse
@@ -69,6 +68,15 @@ test-parse:
 test-intrp:
 	@echo
 	@echo Interpreter test:
+
+	@# Two running methods are provided: one with valgrind,
+	@# for leak check and debugging, and one without it,
+	@# which is the "real" version. To use one or the other,
+	@# simply uncomment the line.
+	@# "@" symbols are used to prevent these comments from
+	@# appearing in the Makefile output.
+
+	@#valgrind --leak-check=yes build/tori tests/test.tori
 	build/tori tests/test.tori
 
 -include $(DEPS)
