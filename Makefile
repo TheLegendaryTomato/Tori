@@ -47,6 +47,8 @@ $(TARGET): $(OBJS)
 	cp src/parse/tparse build/tparse
 	cp src/intrp/tori build/tori
 
+	cp LICENSE.txt build/LICENSE.txt
+
 $(INTRP_OBJS): $(PARSER_OBJS)
 
 $(PARSER_OBJS):
@@ -69,10 +71,16 @@ test-intrp:
 	@echo
 	@echo Interpreter test:
 
-	@# Two running methods are provided: one with valgrind,
+	@# Two running methods are provided - one with Valgrind,
 	@# for leak check and debugging, and one without it,
 	@# which is the "real" version. To use one or the other,
 	@# simply uncomment the line.
+
+	@# When running with Valgrind, you will notice that there
+	@# are some "still reachable" blocks. This is due to an
+	@# issue with flex that I am too lazy to go and fix right
+	@# now.
+
 	@# "@" symbols are used to prevent these comments from
 	@# appearing in the Makefile output.
 

@@ -32,6 +32,12 @@ char *eval_err_to_string(ErrorType err) {
 		case ERR_DUPLICATE_PROGRAM:
 			strcpy(out, "found a non-root 'program' node");
 			break;
+		case ERR_INVALID_VALUE:
+			strcpy(out, "node has an incorrect value");
+			break;
+		case ERR_MISSING_VALUE:
+			strcpy(out, "node is missing a value");
+			break;
 		default:
 			char *buff = malloc(STR_MAX_LEN);
 			strcpy(buff, "unrecognized error code '%d'");

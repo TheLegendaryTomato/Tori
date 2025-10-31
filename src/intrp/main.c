@@ -3,26 +3,29 @@
  * 2025 Aethari
  */
 
+/*
+	General project todo:
+	TODO: Rewrite .h files to be more like `stack.h`
+	TODO: Rewrite stuff so that it isn't limited to 65 characters
+	TODO: Create file src/README.md to explain project folders
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
 #include "syntax-no-main.tab.h"
 
-#include "ast.h"
 #include "eval.h"
 
 #define MAX_STRING_LEN 4096
+#define VERSION "Unnumbered alpha version"
 
 // == Variables ================================================
 extern FILE *yyin;
 char filename[MAX_STRING_LEN] = "";
 
 // == Functions ================================================
-// We need to decide whether or not we want more command line
-// parameters than just the input file
-
 void parse_args(int argc, char *args[]) {
 	for(int i = 1; i < argc; i++) {
 		int is_option = 0;
@@ -37,6 +40,23 @@ void parse_args(int argc, char *args[]) {
 		}
 
 		if(is_option == 1) {
+			switch(arg[1]) {
+				case 'h':
+					printf("Usage: tori [OPTIONS] [filename]\n");
+					printf("Interpreter for the Tori programming language\n\n");
+
+					printf("Options:\n");
+					printf("\t-v\tDisplay the version number and exit\n");
+					printf("\t-h\tDisplay this help menu and exit\n");
+					exit(1);
+				case 'v':
+					printf("%s\n", VERSION);
+					exit(1);
+				default:
+					printf("Unrecognized option '-%c'\n", arg[1]);
+					printf("Use `tori -h` for more info\n");
+					exit(1);
+			}
 		}
 	}
 }
@@ -47,7 +67,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	if(strcmp(filename, "") == 0) {
-		printf("Error (main.c): No input file was found. See `tori -h` for more information.\n");
+		printf("Error: No input file was found. See `tori -h` for more information.\n");
 		return 1;
 	}
 
@@ -55,7 +75,7 @@ int main(int argc, char *argv[]) {
 	FILE *f = fopen(filename, "r");
 
 	if(f == NULL) {
-		printf("Error (main.c): Could not open file '%s':\n\t", filename);
+		printf("Error: Could not open file '%s':\n\t", filename);
 		perror("");
 		return 1;
 	}
@@ -73,4 +93,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("HELLO WORLD! Testing includes\n");
+	
+	return 0;
 }

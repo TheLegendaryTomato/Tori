@@ -21,7 +21,13 @@ typedef enum {
 
 	/// Thrown when a node other than the root node has type
 	/// `TNT_PROGRAM`
-	ERR_DUPLICATE_PROGRAM
+	ERR_DUPLICATE_PROGRAM,
+
+	/// Thrown when a node contains a value it shouldn't
+	ERR_INVALID_VALUE,
+
+	/// Thrown when a node is missing a value it should have
+	ERR_MISSING_VALUE
 } ErrorType;
 
 /// Creates an error message from an `ErrorType` value and
