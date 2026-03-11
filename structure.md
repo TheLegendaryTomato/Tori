@@ -9,7 +9,7 @@ or documentation.
 `main.c` handles program entry, commandline parameters, and the program loop
 
 ## Program lib files
-`string.h` is a basic dynamic string library
+`tstring.h` is a basic dynamic string library
 `array.h` is a dynamic array struct that is used by the C backend, but **not** by Tori
 `memory.h` provides global custom malloc and dealloc implementations for easier changes later
 `log.h` is a small logging library designed to assist in development

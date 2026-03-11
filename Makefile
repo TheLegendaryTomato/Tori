@@ -1,5 +1,4 @@
 # Makefile used to build Tori
-# 2026 CJHB
 
 # For now this only supports Linux, I will add building for Windows later
 
@@ -19,8 +18,6 @@ $(TARGET): $(OBJS)
 	mkdir -p build
 	$(CC) $(OBJS) $(INCLUDE) $(CFLAGS) -o build/$(TARGET)
 
-	cp LICENSE.txt build/LICENSE.txt
-
 %.o:%.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
@@ -37,5 +34,5 @@ test: $(TARGET)
 	@# "@" symbols are used to prevent these comments from
 	@# appearing in the Makefile output.
 
-	@#valgrind --leak-check=yes build/tori test/test.tori
+	@#valgrind --leak-check=yes --track-origins=yes build/tori test/test.tori
 	build/tori tests/test.tori
