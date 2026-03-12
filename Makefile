@@ -1,7 +1,5 @@
 # Makefile used to build Tori
 
-# For now this only supports Linux, I will add building for Windoze later
-
 CC=gcc
 
 SRC=$(wildcard src/*.c)
@@ -12,21 +10,38 @@ CFLAGS=-Wall -g
 
 TARGET=tori
 
-all: $(TARGET)
+# Check for Windows
+ifeq ($(OS),Windows_NT)
+	EXE=.exe
+	MKDIR=mkdir
+	RM=del /Q
+	RMDIR=rmdir /S /Q
 
-$(TARGET): $(OBJS)
-	mkdir -p build
-	$(CC) $(OBJS) $(INCLUDE) $(CFLAGS) -o build/$(TARGET)
+# Unix systems
+else
+	EXE=
+	MKDIR=mkdir -p
+	RM=rm -f
+	RMDIR=rm -rf
+endif
+
+BUILD_TARGET=build/$(TARGET)$(EXE)
+
+all: $(BUILD_TARGET)
+
+$(BUILD_TARGET): $(OBJS)
+	$(MKDIR) build
+	$(CC) $(OBJS) $(INCLUDE) $(CFLAGS) -o $(BUILD_TARGET)
 
 %.o:%.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
-	rm -fr build
-	rm -fr $(OBJS)
+	$(RMDIR) build
+	$(RM) $(OBJS)
 
-test: $(TARGET)
-	build/tori tests/test.tori
+test: $(BUILD_TARGET)
+	$(BUILD_TARGET) tests/test.tori
 
-valtest: $(TARGET)
-	valgrind --leak-check=yes --track-origins=yes build/tori test/test.tori
+valtest: $(BUILD_TARGET)
+	valgrind --leak-check=yes --track-origins=yes $(BUILD_TARGET) test/test.tori
