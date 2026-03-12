@@ -18,5 +18,8 @@ void terror_throw(TErrorType type) {
 		case TERRORTYPE_ALLOC_FAIL:
 			printf("Error: Memory allocation failed\n");
 			exit(1);
+		case TERRORTYPE_OUT_OF_BOUNDS:
+			printf("Error: Attempt to access an index that is out-of-bounds");
+			exit(1);
 	}
 }

@@ -7,11 +7,14 @@
 
 // The actual string object.
 typedef struct {
+	// The string's data.
 	char *buff;
+
+	// The length of the string (does not include null terminated character).
 	size_t len;
 } TString;
 
-// Create a new TString object and return it.
+// Creates a new TString object and return it.
 TString string_new(char *str, size_t len);
 
 // Completely destroys the string, freeing any memory it had allocated.
