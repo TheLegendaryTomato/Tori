@@ -7,8 +7,8 @@
 #include "tstring.h"
 #include "terror.h"
 
-String string_new(char *str, size_t len) {
-	String out;
+TString string_new(char *str, size_t len) {
+	TString out;
 
 	out.len = len;
 
@@ -31,19 +31,19 @@ String string_new(char *str, size_t len) {
 	return out;
 }
 
-void string_free(String str) {
+void string_free(TString str) {
 	free(str.buff);
 }
 
-String string_dup(String src) {
+TString string_dup(TString src) {
 	return string_new(src.buff, src.len);
 }
 
-size_t string_len(String str) {
+size_t string_len(TString str) {
 	return str.len;
 }
 
-String string_cat(String first, String second) {
+TString string_cat(TString first, TString second) {
 	size_t len = first.len + second.len;
 
 	char *buff = malloc(len + 1);
@@ -51,13 +51,13 @@ String string_cat(String first, String second) {
 	strcat(buff, first.buff);
 	strcat(buff, second.buff);
 
-	String out = string_new(buff, len);
+	TString out = string_new(buff, len);
 
 	free(buff);
 	return out;
 }
 
-String string_sub(String src, int start, int end) {
+TString string_sub(TString src, int start, int end) {
 	// the ending length of the string (not null-terminated)
 	int len = end - start;
 
@@ -65,16 +65,16 @@ String string_sub(String src, int start, int end) {
 
 	strncpy(buff, src.buff + start, len);
 
-	String out = string_new(buff, len);
+	TString out = string_new(buff, len);
 
 	free(buff);
 	return out;
 }
 
-void string_print(String str) {
+void string_print(TString str) {
 	printf("%s", str.buff);
 }
 
-void string_println(String str) {
+void string_println(TString str) {
 	printf("%s\n", str.buff);
 }

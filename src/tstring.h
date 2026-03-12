@@ -2,37 +2,37 @@
 
 #include <stdio.h>
 
-#ifndef STRING_H
-#define STRING_H
+#ifndef TSTRING_H
+#define TSTRING_H
 
 // The actual string object.
 typedef struct {
 	char *buff;
 	size_t len;
-} String;
+} TString;
 
-// Create a new `String` object and return it.
-String string_new(char *str, size_t len);
+// Create a new TString object and return it.
+TString string_new(char *str, size_t len);
 
 // Completely destroys the string, freeing any memory it had allocated.
-void string_free(String str);
+void string_free(TString str);
 
 // Returns the length of the string.
-size_t string_len(String str);
+size_t string_len(TString str);
 
-// Creates a new String object with `src` placed at the end of `dest`
-String string_cat(String first, String second);
+// Creates a new TString object with `src` placed at the end of `dest`
+TString string_cat(TString first, TString second);
 
-// Returns a duplicate String object of `str`
-String string_dup(String src);
+// Returns a duplicate TString object of `str`
+TString string_dup(TString src);
 
 // Returns a substring of `src`. `start` is inclusive, `end` is not.
-String string_sub(String src, int start, int end);
+TString string_sub(TString src, int start, int end);
 
-// Prints a String object.
-void string_print(String str);
+// Prints a TString object.
+void string_print(TString str);
 
-// Prints a String object, followed by a newline character.
-void string_println(String str);
+// Prints a TString object, followed by a newline character.
+void string_println(TString str);
 
 #endif

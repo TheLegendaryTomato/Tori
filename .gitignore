@@ -1,14 +1,3 @@
 *.o
-*.d
-*.swp
 *.exe
 build/
-
-src/parse/syntax.tab.c
-src/parse/syntax.tab.h
-src/parse/syntax-no-main.tab.c
-src/parse/syntax-no-main.tab.h
-src/parse/lex.yy.c
-src/parse/tparse
-
-src/intrp/tori
