@@ -13,6 +13,7 @@ or documentation.
 - `tarray.h` is a dynamic array struct that is used by the C backend, but **not** by Tori  
 - `tlog.h` is a small logging library designed to assist in development (may get dropped)  
 - `terror.h` handles errors that are thrown during Tori lexing / parsing, as well as runtime errors  
+- `tpath.h` provides several utility functions for modifying and handling path strings
 
 ## Lexer
 - `tlex.h` reads files, tokenizes them, then returns the tokens in a dynamic array  

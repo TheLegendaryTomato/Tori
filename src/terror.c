@@ -15,6 +15,9 @@
 
 void terror_throw(TErrorType type) {
 	switch(type) {
+		case TERRORTYPE_FILE_OPEN_FAIL:
+			printf("Error: Could not open file\n");
+			exit(1);
 		case TERRORTYPE_ALLOC_FAIL:
 			printf("Error: Memory allocation failed\n");
 			exit(1);
