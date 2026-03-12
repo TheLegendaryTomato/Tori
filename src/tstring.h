@@ -20,17 +20,21 @@ TString string_new(char *str, size_t len);
 // Completely destroys the string, freeing any memory it had allocated.
 void string_free(TString str);
 
+// Returns a duplicate TString object of `str`
+TString string_dup(TString str);
+
 // Returns the length of the string.
 size_t string_len(TString str);
 
 // Creates a new TString object with `src` placed at the end of `dest`
 TString string_cat(TString first, TString second);
 
-// Returns a duplicate TString object of `str`
-TString string_dup(TString src);
-
 // Returns a substring of `src`. `start` is inclusive, `end` is not.
 TString string_sub(TString src, int start, int end);
+
+// Returns the buffer of TString `str` as a regular C string. The memory
+// will need to be freed.
+char *string_get(TString str);
 
 // Prints a TString object.
 void string_print(TString str);

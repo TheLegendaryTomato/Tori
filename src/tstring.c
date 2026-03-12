@@ -35,8 +35,8 @@ void string_free(TString str) {
 	free(str.buff);
 }
 
-TString string_dup(TString src) {
-	return string_new(src.buff, src.len);
+TString string_dup(TString str) {
+	return string_new(str.buff, str.len);
 }
 
 size_t string_len(TString str) {
@@ -68,6 +68,14 @@ TString string_sub(TString src, int start, int end) {
 	TString out = string_new(buff, len);
 
 	free(buff);
+	return out;
+}
+
+char *string_get(TString str) {
+	char *out = malloc(str.len + 1);
+
+	strcpy(out, str.buff);
+
 	return out;
 }
 

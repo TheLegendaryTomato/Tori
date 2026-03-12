@@ -4,8 +4,8 @@ I plan on working on it casually when I feel like it, so no promises about anyth
 Example planned syntax is stored in [example-syntax.md](example-syntax.md).  
 
 ## Build requirements:
-- *make*
-- *gcc*  
+- `make`
+- `gcc`  
 
 To build, navigate to the location where you cloned this repository, and
 run `make`.

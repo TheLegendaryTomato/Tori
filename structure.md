@@ -11,7 +11,6 @@ or documentation.
 ## Program lib files
 - `tstring.h` is a basic dynamic string library  
 - `tarray.h` is a dynamic array struct that is used by the C backend, but **not** by Tori  
-- `tmem.h` provides global custom malloc and dealloc implementations for easier changes later  
 - `tlog.h` is a small logging library designed to assist in development (may get dropped)  
 - `terror.h` handles errors that are thrown during Tori lexing / parsing, as well as runtime errors  
 

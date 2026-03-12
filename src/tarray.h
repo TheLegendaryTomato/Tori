@@ -1,5 +1,6 @@
 // Basic dynamic sized array library
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 #ifndef TARRAY_H
