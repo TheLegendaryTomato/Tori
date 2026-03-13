@@ -13,7 +13,7 @@
 TString tpath_real(TString path) {
 	char *buff = string_get(path);
 
-	char *real = _fullpath(NULL, buff);
+	char *real = _fullpath(NULL, buff, 0);
 
 	if(!real) {
 		printf("Error: Call to _fullpath() failed\n");

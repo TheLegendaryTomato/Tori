@@ -1,6 +1,8 @@
 // Basic dynamic string library
+// This is the most used / important file in the entire project
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #ifndef TSTRING_H
 #define TSTRING_H
@@ -39,6 +41,12 @@ TString string_sub(TString src, int start, int end);
 // Returns the buffer of TString `str` as a regular C string. The memory
 // will need to be freed.
 char *string_get(TString str);
+
+// Checks whether or not the contents of TString `str` are an integer.
+bool string_is_int(TString str);
+
+// Checks whether or not the contents of TString `str` are a float.
+bool string_is_float(TString str);
 
 // Prints a TString object.
 void string_print(TString str);

@@ -111,6 +111,28 @@ char *string_get(TString str) {
 	return out;
 }
 
+bool string_is_int(TString str) {
+	char *buff;
+	strtol(str.buff, &buff, 10);
+
+	if(str.buff == buff || *buff != '\0') {
+		return false;
+	}
+
+	return true;
+}
+
+bool string_is_float(TString str) {
+	char *buff;
+	strtof(str.buff, &buff);
+
+	if(str.buff == buff || *buff != '\0') {
+		return false;
+	}
+
+	return true;
+}
+
 void string_print(TString str) {
 	printf("%s", str.buff);
 }
