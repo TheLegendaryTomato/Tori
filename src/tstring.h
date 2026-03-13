@@ -30,7 +30,7 @@ size_t string_len(TString str);
 TString string_cat(TString first, TString second);
 
 // Adds a character `append` to the end of TString `str` and returns it
-// as a new TString.
+// as a new TString. This destroys the original string.
 TString string_append(TString str, char append);
 
 // Returns a substring of `src`. `start` is inclusive, `end` is not.

@@ -77,6 +77,7 @@ TString string_append(TString str, char append) {
 	TString out = string_new(buff, len);
 
 	free(buff);
+	string_free(str);
 	return out;
 }
 

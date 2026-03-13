@@ -132,6 +132,7 @@ TArray tlex_lex(TString p) {
 			TTokenType token_type = GetTokenType(current_word);
 			printf("current word: ");
 			string_println(current_word);
+			string_free(current_word);
 			current_word = string_new("", 0);
 		}
 
