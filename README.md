@@ -3,6 +3,8 @@ I plan on working on it casually when I feel like it, so no promises about anyth
 
 Example planned syntax is stored in [example-syntax.md](example-syntax.md).  
 
+Documentation on which files do what can be found in [structure.md](structure.md)  
+
 ## Build requirements:
 - `make`
 - `gcc`  

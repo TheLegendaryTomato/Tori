@@ -48,8 +48,31 @@ TString string_cat(TString first, TString second) {
 
 	char *buff = malloc(len + 1);
 
+	if(!buff) {
+		terror_throw(TERRORTYPE_ALLOC_FAIL);
+	}
+
 	strcat(buff, first.buff);
 	strcat(buff, second.buff);
+
+	TString out = string_new(buff, len);
+
+	free(buff);
+	return out;
+}
+
+TString string_append(TString str, char append) {
+	size_t len = str.len + 1;
+
+	char *buff = malloc(len + 1);
+
+	if(!buff) {
+		terror_throw(TERRORTYPE_ALLOC_FAIL);
+	}
+
+	memcpy(buff, str.buff, str.len);
+	buff[len-1] = append;
+	buff[len] = '\0';
 
 	TString out = string_new(buff, len);
 
@@ -63,6 +86,10 @@ TString string_sub(TString src, int start, int end) {
 
 	char *buff = malloc(len);
 
+	if(!buff) {
+		terror_throw(TERRORTYPE_ALLOC_FAIL);
+	}
+
 	strncpy(buff, src.buff + start, len);
 
 	TString out = string_new(buff, len);
@@ -73,6 +100,10 @@ TString string_sub(TString src, int start, int end) {
 
 char *string_get(TString str) {
 	char *out = malloc(str.len + 1);
+
+	if(!out) {
+		terror_throw(TERRORTYPE_ALLOC_FAIL);
+	}
 
 	strcpy(out, str.buff);
 

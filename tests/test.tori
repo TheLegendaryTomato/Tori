@@ -1,4 +1,5 @@
 : Generic Tori test code
-: 2025 Aethari
 
 var x : int;
+: the type is automatically assigned by the interpreter / compiler
+var y, 10;
