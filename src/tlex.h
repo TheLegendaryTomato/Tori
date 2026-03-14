@@ -37,7 +37,7 @@ typedef struct {
 	int line;
 } TToken;
 
-// Tokenizes an input file, turning it into a `TArray` of tokens.
+// Tokenizes input file `p`, turning it into a `TArray` of tokens.
 TArray tlex_lex(TString p);
 
 #endif
