@@ -10,7 +10,7 @@
 TArray tarray_new(size_t start_len) {
 	TArray out;
 
-	out.len = start_len;
+	out.len = 0;
 
 	// The `sizeof` call allocates each "block" of the array with the
 	// size of what is essentially a void pointer, making the correct
@@ -94,6 +94,10 @@ int tarray_find(TArray arr, void *val) {
 	}
 
 	return -1;
+}
+
+size_t tarray_len(TArray arr) {
+	return arr.len;
 }
 
 void *tarray_get(TArray arr, size_t index) {

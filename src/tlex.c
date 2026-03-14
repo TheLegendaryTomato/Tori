@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include <ctype.h>
 
 #include "tarray.h"
@@ -11,16 +12,20 @@
 #include "tpath.h"
 #include "tlex.h"
 
+// Every keyword in Tori.
 const char *keywords[] = {
-	"var"
+	"var",
+	"int"
 };
 
+// Common whitespace characters.
 const char *whitespace[] = {
 	" ",
 	"\t",
 	"\n"
 };
 
+// Mathematical operators.
 const char *operators[] = {
 	"=",
 	"+",
@@ -35,11 +40,15 @@ const char *operators[] = {
 	"--"
 };
 
+// Tori reserved symbols. Any characters that are not alphanumeric or part of this list
+// will be considered invalid, and terminate program execution.
 const char *delimiters[] = {
+	":",
 	";",
 	","
 };
 
+// Characters that will terminate the program if found in the input stream.
 const char *invalid[] = {
 	"@",
 	"#",
@@ -49,7 +58,7 @@ const char *invalid[] = {
 	"\\"
 };
 
-// Retrives the best `TTokenType` for string `s`.
+// Retrives the best `TTokenType` value for string `s`.
 TTokenType GetTokenType(TString s) {
 	char *str = string_get(s);
 
@@ -103,6 +112,7 @@ TTokenType GetTokenType(TString s) {
 
 	// check for identifier
 	if(isalpha(str[0]) || str[0] == '_') {
+		free(str);
 		return TTOKENTYPE_IDENTIFIER;
 	}
 
@@ -144,31 +154,84 @@ TArray tlex_lex(TString p) {
 	TArray out = tarray_new(1);
 
 	// lex through the string here
+
+	/*
+	 * steps to follow:
+	 * 1) create an empty string to build upon
+	 * 2) read the current character
+	 *    2.5) check if the character is invalid
+	 * 3.1) if the character is whitespace, create a token from the built string
+	 * 3.2) if the character is a delimiter, create a token from the built string, then
+	 *      create and insert a second token with the delimiter character
+	 * 4) if the character is not a stopping point, add it to the built string (this
+	 *    creates a "word" in between stopping points, such as "int" or "var")
+	 *
+	 * token building:
+	 * 1) identify the type of the token
+	 * 2) use the built string as the value of the token
+	 * 3) identify the line the token is on
+	 * 4) construct the token
+	 * 5) add the newly constructed token to the array
+	*/
+
 	TString current_word = string_new("", 0);
 	int line = 1;
 	for(int i = 0; i < file_len; i++) {
 		char current = buff[i];
 
-		// the main issue right now is that this doesn't split at
-		// tab characters or delimiters
+		bool is_delim = false;
+
+		for(int j = 0; j < sizeof(delimiters) / sizeof(delimiters[0]); j++) {
+			if(current == *delimiters[j]) {
+				is_delim = true;
+				break;
+			}
+		}
+
+		// the main issue right now is that this doesn't split at delimiters
 		// we also need a way to check for comments
-		if(current != ' ' && current != '\n') {
+		if(current != ' ' && current != '\t' && current != '\n' && !is_delim) {	
 			current_word = string_append(current_word, current);
 		} else {
 			// check if the character is invalid
 			char *str = string_get(current_word);
 			size_t len = sizeof(invalid) / sizeof(invalid[0]);
-			for(int i = 0; i < strlen(str); i++) {
-				for(int j = 0; j < len; j++) {
-					if(str[i] == invalid[j][0]) {
+			for(int j = 0; j < strlen(str); j++) {
+				for(int k = 0; k < len; k++) {
+					if(str[j] == invalid[k][0]) {
 						printf("Error: Invalid character found on line %d\n", line);
 						exit(1);
 					}
 				}
 			}
+			free(str);
 
+			// get the token type of the word that is currently being processed
 			TTokenType token_type = GetTokenType(current_word);
 
+			// create the token
+			TToken *token = malloc(sizeof(TToken));
+
+			if(!token) {
+				terror_throw(TERRORTYPE_ALLOC_FAIL);
+			}
+
+			// delimiters need special handling, as the case where we check for them
+			// does not set the delimiter to `current_word`
+			if(is_delim) {
+				token->type = TTOKENTYPE_DELIMITER;
+				token->value = string_append(string_new("", 0), current);
+			} else {
+				token->type = token_type;
+				token->value = string_dup(current_word);
+			}
+
+			token->line = line;
+
+			// add the token to the array
+			tarray_append(&out, token);
+
+			// DEBUG: print the word to stdout
 			printf("current word: ");
 			string_println(current_word);
 
@@ -182,6 +245,7 @@ TArray tlex_lex(TString p) {
 		if(current == '\n') line++;
 	}
 
+	// free the final word, as it gets recreated at the end of the if statement
 	string_free(current_word);
 
 	free(path);

@@ -34,6 +34,9 @@ void tarray_remove(TArray *arr, size_t index);
 // is not found.
 int tarray_find(TArray arr, void *val);
 
+// Returns the size of the TArray.
+size_t tarray_len(TArray arr);
+
 // Returns a value located at position `index` in `arr`.
 void *tarray_get(TArray arr, size_t index);
 
