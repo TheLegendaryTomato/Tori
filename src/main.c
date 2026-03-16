@@ -1,26 +1,26 @@
 // Tori program entry point
 
-#include <stddef.h>
+#include <string.h>
 
 #include "tstring.h"
 #include "tarray.h"
 
 #include "tlex.h"
+#include "tparse.h"
 
 int main(int argc, char *argv[]) {
-	TString path = string_new("tests/test.tori", 15);
-	TArray tokens = tlex_lex(path);
-
-	for(size_t i = 0; i < tarray_len(tokens); i++) {
-		TToken *token = tarray_get(tokens, i);
-
-		string_println(token->value);
-		string_free(token->value);
-		free(token);
+	if(argc > 1) {
+		TString path = string_new(argv[1], strlen(argv[1]));
+		TArray tokens = tlex_lex(path);
+		TArray ast = tparse_parse(tokens);
+	
+		string_free(path);
+		tarray_free(tokens);
+		tarray_free(ast);
+	} else {
+		printf("Error: No input file was found\n");
 	}
 
-	string_free(path);
-	tarray_free(tokens);
 
 	return 0;
 }

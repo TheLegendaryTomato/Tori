@@ -22,7 +22,8 @@ const char *keywords[] = {
 const char *whitespace[] = {
 	" ",
 	"\t",
-	"\n"
+	"\n",
+	"\r"
 };
 
 // Mathematical operators.
@@ -54,9 +55,11 @@ const char *invalid[] = {
 	"$",
 	"^",
 	"&",
+	"%",
 	"\\"
 };
 
+// Checks if a character is a whitespace character.
 bool isWhitespace(char c) {
 	for(int i = 0; i < sizeof(whitespace) / sizeof(whitespace[0]); i++) {
 		if(c == *whitespace[i]) return true;
@@ -148,7 +151,7 @@ TTokenType GetTokenType(TString s) {
 }
 
 // Creates a `TToken` based on several input values. The value returned by this function needs to be freed by the caller.
-TToken *createToken(TString str, int line) {
+TToken *createToken(TString str, int line, int col) {
 	TToken *token = malloc(sizeof(TToken));
 
 	if(!token) {
@@ -160,12 +163,13 @@ TToken *createToken(TString str, int line) {
 	token->type = token_type;
 	token->value = string_dup(str);
 	token->line = line;
+	token->col = col;
 
 	return token;
 }
 
 // Creates a `TToken` representing a delimiter, whose value is determined by `c`. The value returned by the function needs to be freed by the caller.
-TToken *createDelimToken(char c, int line) {
+TToken *createDelimToken(char c, int line, int col) {
 	TToken *token = malloc(sizeof(TToken));
 
 	if(!token) {
@@ -175,6 +179,7 @@ TToken *createDelimToken(char c, int line) {
 	token->type = TTOKENTYPE_DELIMITER;
 	token->value = string_append(string_new("", 0), c);
 	token->line = line;
+	token->col = col;
 
 	return token;
 }
@@ -185,7 +190,6 @@ TArray tlex_lex(TString p) {
 	char *path = string_get(realpath);
 	string_free(realpath);
 
-	printf("path: %s\n", path);
 	FILE *file = fopen(path, "rb");
 
 	if(!file) {
@@ -231,63 +235,91 @@ TArray tlex_lex(TString p) {
 
 	// lex through the string here
 	TString current_word = string_new("", 0);
-	int line = 1;
+	int line = 1, col = 1;
+	bool is_comment = false;
+	bool is_block_comment = false;
 	// loops through all of the characters in the file
 	for(int i = 0; i < file_len; i++) {
 		char current = buff[i];
 
-		bool is_whitespace = false;
-		bool is_delim = false;
-
-		// check if the character is invalid
-		if(isInvalid(current)) {
-			printf("Error: Invalid character found on line %d\n", line);
-			exit(1);
+		// TODO: implement errors for unfinished (or unstarted) block comments
+		if(current == ':') {
+			if(buff[i+1] == '*') {
+				is_block_comment = true;
+			} else if(buff[i-1] == '*') {
+				is_block_comment = false;
+				
+				// skip the current character
+				// without this, the final ":" would be tokenized
+				col++;
+				i++;
+				continue;
+			} else if(buff[i+1] == ':') {
+				is_comment = true;
+			}
 		}
 
-		// check if the character is whitespace
-		if(isWhitespace(current)) is_whitespace = true;
+		if(!is_comment && !is_block_comment) {
+			bool is_whitespace = false;
+			bool is_delim = false;
 
-		// check if the character is a delimiter
-		if(isDelim(current)) is_delim = true;
-
-		TToken *token;
-
-		if(is_whitespace) {
-			// only create the token if the string is not empty (avoids whitespace tokens)
-			if(string_len(current_word) > 0) {
-				// create a `TToken` based off of the current word
-				token = createToken(current_word, line);
-				// add the token to the out array
-				tarray_append(&out, token);
+			// check if the character is invalid
+			if(isInvalid(current)) {
+				printf("Error: Invalid character \'%c\' found on line %d, column %d\n", current, line, col);
+				exit(1);
 			}
 
-			// free the old word
-			string_free(current_word);
-			// reset current_word
-			current_word = string_new("", 0);
-		} else if(is_delim) {
-			// this implementation is the same as whitespace, with the addition of the delimiter tokem
+			// check if the character is whitespace
+			if(isWhitespace(current)) is_whitespace = true;
 
-			if(string_len(current_word) > 0) {
-				token = createToken(current_word, line);
-				tarray_append(&out, token);
+			// check if the character is a delimiter
+			if(isDelim(current)) is_delim = true;
+
+			TToken *token;
+
+			if(is_whitespace) {
+				// only create the token if the string is not empty (avoids whitespace tokens)
+				if(string_len(current_word) > 0) {
+					// create a `TToken` based off of the current word
+					token = createToken(current_word, line, col - string_len(current_word));
+					// add the token to the out array
+					tarray_append(&out, token);
+				}
+
+				// free the old word
+				string_free(current_word);
+				// reset current_word
+				current_word = string_new("", 0);
+			} else if(is_delim) {
+				// this implementation is the same as whitespace, with the addition of the delimiter tokem
+
+				if(string_len(current_word) > 0) {
+					token = createToken(current_word, line, col - string_len(current_word));
+					tarray_append(&out, token);
+				}
+
+				// create the delimiter token
+				TToken *delim = createDelimToken(current, line, col);
+				// add the delimiter to the out array
+				tarray_append(&out, delim);
+
+				string_free(current_word);
+				current_word = string_new("", 0);
+			} else {
+				// continue to build the currrent word
+				current_word = string_append(current_word, current);
 			}
-
-			// create the delimiter token
-			TToken *delim = createDelimToken(current, line);
-			// add the delimiter to the out array
-			tarray_append(&out, delim);
-
-			string_free(current_word);
-			current_word = string_new("", 0);
-		} else {
-			// continue to build the currrent word
-			current_word = string_append(current_word, current);
 		}
+
+		// advance the column tracker
+		col++;
 
 		// advance the line tracker
-		if(current == '\n') line++;
+		if(current == '\n') {
+			col = 1;
+			is_comment = false;
+			line++;
+		}
 	}
 
 	// free the final word, as it gets recreated at the end of the if statement

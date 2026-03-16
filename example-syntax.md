@@ -19,8 +19,8 @@
 - `include` - to include other language files
 - `true`
 - `false`
-- `:` - signifies comments
-- `:* *:` - block comment?
+- `::` - signifies comments
+- `:* *:` - block comment
 
 #### Notes
 - For variable reassignments, we could either do `<var> = <value>;` or use a `set`
@@ -30,9 +30,13 @@
   their own "instructions" and allow the standard libraries to be made easier. This
   would drastically increase readability when using included functions or libraries,
   becuase you don't need the `call` instruction **literally everywhere**. For the
-  example, it does not do this (at leat for now).
+  example, it does not do this (at least for now).
 	- Using this method allows us to do "C-type" stdlib design, as opposed to other
 	  languages where stuff like printing is built-in
+- Looking back at the example code, I realize that `<var> = <var>++;` kind of
+  defeats the entire purpose of an increment operator. I wonder if we should keep
+  the increment and decrement operators? `+=`, `-=`, and other such operators are
+  staying regardless...
 
 #### Example code
 ```tori
@@ -55,6 +59,7 @@ endif;
 func add : int;
 	var x : int;
 	var y : int;
+
 	: Parameters are read in the order which they were sent in the `call` instruction
 	param x, y;
 
@@ -65,7 +70,9 @@ endfunc;
 : don't want the syntax of `var x : int = call add, 1, 2;`, so we have this instead.
 : How it works is that the `ret` instruction simply sets the value of the variable
 : passed in as the last parameter to whatever came after it. So here, the value of
-: `o` (the last parameter) is set to `x+y`, which is what `add` returns.
+: `o` (the last parameter) is set to `x+y`, which is what `add` returns. The
+: unfortunate part about this is that it requires the user to create a new variable
+: *before* calling the function, which can feel awkward and excessive.
 var o : int;
 call add, 1, 2, o;
 call write, o;

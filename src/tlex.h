@@ -35,6 +35,7 @@ typedef struct {
 	TTokenType type;
 	TString value;
 	int line;
+	int col;
 } TToken;
 
 // Tokenizes input file `p`, turning it into a `TArray` of tokens.

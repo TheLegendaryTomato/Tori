@@ -44,4 +44,4 @@ test: $(BUILD_TARGET)
 	$(BUILD_TARGET) tests/test.tori
 
 valtest: $(BUILD_TARGET)
-	valgrind --leak-check=yes --track-origins=yes $(BUILD_TARGET) test/test.tori
+	valgrind --leak-check=yes --track-origins=yes $(BUILD_TARGET) tests/test.tori
