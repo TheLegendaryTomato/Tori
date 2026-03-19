@@ -1,11 +1,5 @@
 :: Generic Tori test code
 
-:*
-This is a test
-of the most wonderful, excellent
-block comment system
-*:
-
 var x : int;
-:: the type is automatically assigned by the interpreter / compiler
-var y, 10; :: test
+:: the type of `y` is automatically assigned by the parser
+var y, 10;

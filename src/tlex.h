@@ -32,9 +32,13 @@ typedef enum {
 
 // A struct that holds data for a single lexer token.
 typedef struct {
+	// The type of the token.
 	TTokenType type;
+	// The token's real value, pulled directly from the input stream.
 	TString value;
+	// The line the token was found on.
 	int line;
+	// The column the token was found on.
 	int col;
 } TToken;
 

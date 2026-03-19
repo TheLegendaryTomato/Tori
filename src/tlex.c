@@ -60,7 +60,7 @@ const char *invalid[] = {
 };
 
 // Checks if a character is a whitespace character.
-bool isWhitespace(char c) {
+bool IsWhitespace(char c) {
 	for(int i = 0; i < sizeof(whitespace) / sizeof(whitespace[0]); i++) {
 		if(c == *whitespace[i]) return true;
 	}
@@ -69,7 +69,7 @@ bool isWhitespace(char c) {
 }
 
 // Checks if a character is a delimiter.
-bool isDelim(char c) {
+bool IsDelim(char c) {
 	for(int i = 0; i < sizeof(delimiters) / sizeof(delimiters[0]); i++) {
 		if(c == *delimiters[i]) return true;
 	}
@@ -78,7 +78,7 @@ bool isDelim(char c) {
 }
 
 // Checks if a character is an invalid character.
-bool isInvalid(char c) {
+bool IsInvalid(char c) {
 	for(int i = 0; i < sizeof(invalid) / sizeof(invalid[0]); i++) {
 		if(c == *invalid[i]) return true;
 	}
@@ -151,7 +151,7 @@ TTokenType GetTokenType(TString s) {
 }
 
 // Creates a `TToken` based on several input values. The value returned by this function needs to be freed by the caller.
-TToken *createToken(TString str, int line, int col) {
+TToken *CreateToken(TString str, int line, int col) {
 	TToken *token = malloc(sizeof(TToken));
 
 	if(!token) {
@@ -169,7 +169,7 @@ TToken *createToken(TString str, int line, int col) {
 }
 
 // Creates a `TToken` representing a delimiter, whose value is determined by `c`. The value returned by the function needs to be freed by the caller.
-TToken *createDelimToken(char c, int line, int col) {
+TToken *CreateDelimToken(char c, int line, int col) {
 	TToken *token = malloc(sizeof(TToken));
 
 	if(!token) {
@@ -215,7 +215,7 @@ TArray tlex_lex(TString p) {
 	// the array that tokens will be wrote to
 	TArray out = tarray_new(1);
 
-	// TODO: rewrite the following process as an actual documentation comment
+	// TODO: rewrite the following process as an actual, well-written documentation comment
 	/*
 	 * steps to follow:
 	 * 1) create an empty string to build upon
@@ -242,6 +242,7 @@ TArray tlex_lex(TString p) {
 	for(int i = 0; i < file_len; i++) {
 		char current = buff[i];
 
+		// set states when a comment is detected
 		// TODO: implement errors for unfinished (or unstarted) block comments
 		if(current == ':') {
 			if(buff[i+1] == '*') {
@@ -264,16 +265,16 @@ TArray tlex_lex(TString p) {
 			bool is_delim = false;
 
 			// check if the character is invalid
-			if(isInvalid(current)) {
+			if(IsInvalid(current)) {
 				printf("Error: Invalid character \'%c\' found on line %d, column %d\n", current, line, col);
 				exit(1);
 			}
 
 			// check if the character is whitespace
-			if(isWhitespace(current)) is_whitespace = true;
+			if(IsWhitespace(current)) is_whitespace = true;
 
 			// check if the character is a delimiter
-			if(isDelim(current)) is_delim = true;
+			if(IsDelim(current)) is_delim = true;
 
 			TToken *token;
 
@@ -281,7 +282,7 @@ TArray tlex_lex(TString p) {
 				// only create the token if the string is not empty (avoids whitespace tokens)
 				if(string_len(current_word) > 0) {
 					// create a `TToken` based off of the current word
-					token = createToken(current_word, line, col - string_len(current_word));
+					token = CreateToken(current_word, line, col - string_len(current_word));
 					// add the token to the out array
 					tarray_append(&out, token);
 				}
@@ -294,12 +295,12 @@ TArray tlex_lex(TString p) {
 				// this implementation is the same as whitespace, with the addition of the delimiter tokem
 
 				if(string_len(current_word) > 0) {
-					token = createToken(current_word, line, col - string_len(current_word));
+					token = CreateToken(current_word, line, col - string_len(current_word));
 					tarray_append(&out, token);
 				}
 
 				// create the delimiter token
-				TToken *delim = createDelimToken(current, line, col);
+				TToken *delim = CreateDelimToken(current, line, col);
 				// add the delimiter to the out array
 				tarray_append(&out, delim);
 

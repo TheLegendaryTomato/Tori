@@ -40,3 +40,4 @@ or documentation.
 *These files are not built by C, but rather handwritten and copied to the proper locations*  
 
 - `stdio.tori` provides functions for reading and writing from standard input/output  
+- `math.tori` provides common math functons, such as `pow`, `sqrt`, and `tan`  

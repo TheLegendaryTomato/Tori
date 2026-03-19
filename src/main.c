@@ -9,6 +9,7 @@
 #include "tparse.h"
 
 int main(int argc, char *argv[]) {
+	// IMPROVMENT: put documentation for the core "loop" here?
 	if(argc > 1) {
 		TString path = string_new(argv[1], strlen(argv[1]));
 		TArray tokens = tlex_lex(path);

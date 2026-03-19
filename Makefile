@@ -10,19 +10,15 @@ CFLAGS=-Wall -g
 
 TARGET=tori
 
+MKDIR=mkdir -p
+RM=rm -f
+RMDIR=rm -rf
 # Check for Windows
 ifeq ($(OS),Windows_NT)
 	EXE=.exe
-	MKDIR=mkdir
-	RM=del /Q
-	RMDIR=rmdir /S /Q
-
-# Unix systems
 else
+# Unix systems
 	EXE=
-	MKDIR=mkdir -p
-	RM=rm -f
-	RMDIR=rm -rf
 endif
 
 BUILD_TARGET=build/$(TARGET)$(EXE)
