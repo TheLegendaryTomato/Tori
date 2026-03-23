@@ -38,7 +38,13 @@ const char *operators[] = {
 	"*=",
 	"/=",
 	"++",
-	"--"
+	"--",
+	"==",
+	"!=",
+	"<=",
+	">=",
+	">",
+	"<",
 };
 
 // Tori reserved symbols. Any characters that are not alphanumeric or part of this list will be considered invalid, and terminate program execution.
@@ -243,7 +249,7 @@ TArray tlex_lex(TString p) {
 		char current = buff[i];
 
 		// set states when a comment is detected
-		// TODO: implement errors for unfinished (or unstarted) block comments
+		// TODO: implement errors for unfinished block comments
 		if(current == ':') {
 			if(buff[i+1] == '*') {
 				is_block_comment = true;

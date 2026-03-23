@@ -3,3 +3,7 @@
 var x : int;
 :: the type of `y` is automatically assigned by the parser
 var y, 10;
+
+if x == 10;
+	write, "x is 10";
+endif;
