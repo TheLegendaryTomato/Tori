@@ -4,6 +4,7 @@
 
 #include "tstring.h"
 #include "tarray.h"
+#include "tast.h"
 
 #include "tlex.h"
 #include "tparse.h"
@@ -14,6 +15,18 @@ int main(int argc, char *argv[]) {
 		TString path = string_new(argv[1], strlen(argv[1]));
 		TArray tokens = tlex_lex(path);
 		TArray ast = tparse_parse(tokens);
+
+		// this loop will probably form the interpreter later
+		for(int i = 0; i < tarray_len(ast); i++) {
+			void *n = tarray_get(ast, i);
+			TAstBaseNode *node = (TAstBaseNode *)n;
+
+			if(node->node_type == TASTNODETYPE_VAR_DECL) {
+				TAstVarDefNode *var = (TAstVarDefNode *)node;
+			} else if(node->node_type == TASTNODETYPE_VAR_INIT) {
+				TAstVarDefNode *var = (TAstVarDefNode *)node;
+			}
+		}
 	
 		string_free(path);
 		tarray_free(tokens);

@@ -1,9 +1,14 @@
 :: Generic Tori test code
 
-var x : int;
-:: the type of `y` is automatically assigned by the parser
-var y, 10;
 
-if x == 10;
-	write, "x is 10";
-endif;
+:: Variable declaration tests
+var a : int;
+var b : float;
+var c : bool;
+var d : string;
+
+:: Variable initialization tests
+var w, 10;
+var x, 5.5;
+var y, true;
+var z, "test";
