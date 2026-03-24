@@ -33,4 +33,4 @@ In the shell, run the following command:
 ```bash
 pacman -S make gcc
 ```
-This installs `make` and `gcc` on your system. Now you can simply run `make` where you cloned the repository, and Tori should build.
+This installs `make` and `gcc` on your system. Running `make` from an `msys2` or Git Bash shell while in the directory where you cloned the repository should build Tori.  

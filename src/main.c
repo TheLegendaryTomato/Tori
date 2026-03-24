@@ -23,8 +23,24 @@ int main(int argc, char *argv[]) {
 
 			if(node->node_type == TASTNODETYPE_VAR_DECL) {
 				TAstVarDefNode *var = (TAstVarDefNode *)node;
+
+				if(!var->value.null && var->var_type == TVARTYPE_STRING) {
+					char *out = string_get(var->value.s);
+					printf("string variable found: %s\n", out);
+
+					string_free(var->value.s);
+					free(out);
+				}
 			} else if(node->node_type == TASTNODETYPE_VAR_INIT) {
 				TAstVarDefNode *var = (TAstVarDefNode *)node;
+				
+				if(!var->value.null && var->var_type == TVARTYPE_STRING) {
+					char *out = string_get(var->value.s);
+					printf("string variable found: %s\n", out);
+
+					string_free(var->value.s);
+					free(out);
+				}
 			}
 		}
 	
