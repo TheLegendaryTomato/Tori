@@ -28,25 +28,28 @@ TArray tparse_parse(TArray tokens) {
 					TToken *operator = tarray_get(tokens, i+2);
 					char *operator_string = string_get(operator->value);
 
-					TAstVarDefNode node;
+					TAstVarDefNode *node = malloc(sizeof(TAstVarDefNode));
 
 					if(strcmp(operator_string, ":") == 0) {
 						// declaration
-						node.node_type = TASTNODETYPE_VAR_DECL;
-						node.initialized = false;
+						node->node_type = TASTNODETYPE_VAR_DECL;
+						node->initialized = false;
+
+						TToken *identifier = tarray_get(tokens, i+1);
+						node->identifier = string_dup(identifier->value);
 
 						// find the variable's type
 						TToken *type = tarray_get(tokens, i+3);
 						char *type_string = string_get(type->value);
 
 						if(strcmp(type_string, "int") == 0) {
-							node.var_type = TVARTYPE_INT;
+							node->var_type = TVARTYPE_INT;
 						} else if(strcmp(type_string, "float") == 0) {
-							node.var_type = TVARTYPE_FLOAT;
+							node->var_type = TVARTYPE_FLOAT;
 						} else if(strcmp(type_string, "bool") == 0) {
-							node.var_type = TVARTYPE_BOOL;
+							node->var_type = TVARTYPE_BOOL;
 						} else if(strcmp(type_string, "string") == 0) {
-							node.var_type = TVARTYPE_STRING;
+							node->var_type = TVARTYPE_STRING;
 						} else {
 							printf("Error: Invalid type \"%s\" in variable declaration on line %d, column %d\n", type_string, type->line, type->col);
 							exit(1);
@@ -55,30 +58,33 @@ TArray tparse_parse(TArray tokens) {
 						// cleanup
 						free(type_string);
 
-						node.value.null = true;
+						node->null = true;
 					} else if(strcmp(operator_string, ",") == 0) {
 						// initilization
-						node.node_type = TASTNODETYPE_VAR_INIT;
-						node.initialized = true;
+						node->node_type = TASTNODETYPE_VAR_INIT;
+						node->initialized = true;
+
+						TToken *identifier = tarray_get(tokens, i+1);
+						node->identifier = string_dup(identifier->value);
 
 						TToken *value = tarray_get(tokens, i+3);
 						char *value_string = string_get(value->value);
 
 						if(string_is_int(value->value)) {
-							node.var_type = TVARTYPE_INT;
-							node.value.i = atoi(value_string);
+							node->var_type = TVARTYPE_INT;
+							node->value.i = atoi(value_string);
 						} else if(string_is_float(value->value)) {
-							node.var_type = TVARTYPE_FLOAT;
-							node.value.f = atof(value_string);
+							node->var_type = TVARTYPE_FLOAT;
+							node->value.f = atof(value_string);
 						} else if(strcmp(value_string, "true") == 0) {
-							node.var_type = TVARTYPE_BOOL;
-							node.value.b = true;
+							node->var_type = TVARTYPE_BOOL;
+							node->value.b = true;
 						} else if(strcmp(value_string, "false") == 0) {
-							node.var_type = TVARTYPE_BOOL;
-							node.value.b = false;
+							node->var_type = TVARTYPE_BOOL;
+							node->value.b = false;
 						} else if(value_string[0] == '"') {
-							node.var_type = TVARTYPE_STRING;
-							node.value.s = string_dup(value->value);
+							node->var_type = TVARTYPE_STRING;
+							node->value.s = string_dup(value->value);
 						} else {
 							terror_throw(TERRORTYPE_INVALID_LITERAL);
 						}
@@ -89,11 +95,13 @@ TArray tparse_parse(TArray tokens) {
 						exit(1);
 					}
 
-					node.line = token->line;
-					node.col = token->col;
+					node->line = token->line;
+					node->col = token->col;
+
+					node->null = false;
 
 					// add the node to the array
-					tarray_append(&out, &node);
+					tarray_append(&out, node);
 
 					free(operator_string);
 				}

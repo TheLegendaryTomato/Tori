@@ -91,14 +91,18 @@ typedef struct {
 	// The type of the variable.
 	TVarType var_type;
 
-	// The value of the variable. This union defines a C value with a type corresponding to the type of the Tori variable. If the `null` value is `true`, it means that the variable has no value.
+	// The name of the variable.
+	TString identifier;
+
+	// If this is true, the variable has no value.
+	bool null;
+
+	// The value of the variable. This union defines a C value with a type corresponding to the type of the Tori variable.
 	union {
 		int i;
 		float f;
 		bool b;
 		TString s;
-
-		bool null;
 	} value;
 
 	// The line the node was found on.
