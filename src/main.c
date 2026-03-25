@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
 			void *n = tarray_get(ast, i);
 			TAstBaseNode *node = (TAstBaseNode *)n;
 
+			// FIXME: replace these if statements with a switch statement later
 			if(node->node_type == TASTNODETYPE_VAR_DECL) {
 				// variable declarations have no values for the variables, so there is nothing to do. later, we will add the variable to the stack, but we can't do that now.
 
@@ -43,7 +44,7 @@ int main(int argc, char *argv[]) {
 						case TVARTYPE_FLOAT:
 							printf("float variable \"");
 							string_print(var->identifier);
-							printf("\" found: %f\n", var->value.f);
+							printf("\" found: %.1f\n", var->value.f);
 
 							string_free(var->identifier);
 							break;

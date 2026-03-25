@@ -244,6 +244,7 @@ TArray tlex_lex(TString p) {
 	int line = 1, col = 1;
 	bool is_comment = false;
 	bool is_block_comment = false;
+	bool is_string_literal = false;
 	// loops through all of the characters in the file
 	for(int i = 0; i < file_len; i++) {
 		char current = buff[i];
@@ -263,6 +264,17 @@ TArray tlex_lex(TString p) {
 				continue;
 			} else if(buff[i+1] == ':') {
 				is_comment = true;
+			}
+		}
+
+		// handle string literals
+		if(current == '"' && !is_comment && !is_block_comment) {
+			if(is_string_literal) {
+				// exit the string literal
+				is_string_literal = false;
+			} else {
+				// start / enter the string literal
+				is_string_literal = true;
 			}
 		}
 
@@ -313,7 +325,7 @@ TArray tlex_lex(TString p) {
 				string_free(current_word);
 				current_word = string_new("", 0);
 			} else {
-				// continue to build the currrent word
+				// continue to build the current word
 				current_word = string_append(current_word, current);
 			}
 		}

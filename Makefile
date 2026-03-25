@@ -37,7 +37,7 @@ clean:
 	$(RM) $(OBJS)
 
 test: $(BUILD_TARGET)
-	$(BUILD_TARGET) tests/test.tori
+	$(BUILD_TARGET) tests/var.tori
 
 valtest: $(BUILD_TARGET)
-	valgrind --leak-check=yes --track-origins=yes $(BUILD_TARGET) tests/test.tori
+	valgrind --leak-check=yes --track-origins=yes $(BUILD_TARGET) tests/var.tori

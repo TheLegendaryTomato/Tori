@@ -13,9 +13,6 @@ typedef enum {
 
 	// Throw when an index of some kind is out of bounds.
 	TERRORTYPE_OUT_OF_BOUNDS,
-
-	// Throw when an invalid literal is found somewhere. This should never be thrown, but if it is, there is a serious issue with the program.
-	TERRORTYPE_INVALID_LITERAL
 } TErrorType;
 
 // Throw an error. Depending on the value of `type`, the program might be

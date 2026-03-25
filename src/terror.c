@@ -24,8 +24,5 @@ void terror_throw(TErrorType type) {
 		case TERRORTYPE_OUT_OF_BOUNDS:
 			printf("Error: Attempt to access an index that is out-of-bounds\n");
 			exit(1);
-		case TERRORTYPE_INVALID_LITERAL:
-			printf("Error: Invalid literal located. If you are a normal user and you are reading this, please report it to the developers immediately.\n");
-			exit(1);
 	}
 }

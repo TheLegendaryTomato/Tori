@@ -1,0 +1,54 @@
+:: Testing for Tori's variables system
+
+:*
+ * Things to make that involve variables:
+ * X Variable definitions
+ * - Variable lookups (using variables in equations / other variables)
+ * - Changing (or setting) variable values outside of definitions
+ *
+ * Errors involving variables:
+ * X Improper operators
+ * X Invalid types
+ * X Extra identifiers
+ * X Extra types / values
+ * X Missing type / value
+ * X Missing identifier
+ * X Incorrect identifier
+ * - Invalid variable lookup (nonexistant variable) (also applies when setting vars)
+ * - Type mismatch when setting variables
+ * - Type mismatch during lookups
+ * - Attempt to make a new variable with the same name as an existing one (handle this in the interpreter?)
+ *
+ * General errors:
+ * - Missing semicolons
+ * - Unexpected tokens outside of statements (i.e. a random character on its own line)
+ * - Unfinished string literals
+ * - Unfinished block comments
+ *:
+
+:: Variable declaration tests
+var a : int;
+var b : float;
+var c : bool;
+var d : string;
+
+:: Variable initialization tests
+var w, 10;
+var x, 5.5;
+var y, true;
+var z, "test of the ages";
+
+:: Error tests (comment out if not testing errors)
+
+:: extra identifier / type / value
+::var e f : int;
+::var f : int int;
+::var g, 10 10;
+
+:: missing type / value
+::var h : ;
+::var i, ;
+
+:: missing identifier
+::var , 10;
+::var : int;
