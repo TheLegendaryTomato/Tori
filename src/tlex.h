@@ -20,8 +20,11 @@ typedef enum {
 	// Essentially operators that aren't used for math (:, ;, ,, etc.).
 	TTOKENTYPE_DELIMITER,
 
-	// Numbers, bools, strings (1, 2.4, true, "example").
+	// Numbers, bools (1, 2.4, true).
 	TTOKENTYPE_LITERAL,
+
+	// String literals ("example").
+	TTOKENTYPE_STRING_LITERAL,
 
 	// User-defined words (variable / function names).
 	TTOKENTYPE_IDENTIFIER,

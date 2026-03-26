@@ -22,8 +22,8 @@
  * General errors:
  * - Missing semicolons
  * - Unexpected tokens outside of statements (i.e. a random character on its own line)
- * - Unfinished string literals
- * - Unfinished block comments
+ * X Unfinished string literals
+ * X Unfinished block comments
  *:
 
 :: Variable declaration tests
@@ -36,7 +36,7 @@ var d : string;
 var w, 10;
 var x, 5.5;
 var y, true;
-var z, "test of the ages";
+var z, "test of string literal";
 
 :: Error tests (comment out if not testing errors)
 
@@ -52,3 +52,6 @@ var z, "test of the ages";
 :: missing identifier
 ::var , 10;
 ::var : int;
+
+:: open string literal
+::var z2, "test of string literal pt 2;

@@ -59,15 +59,6 @@ TArray tparse_parse(TArray tokens) {
 						node->initialized = false;
 						
 						node->identifier = string_dup(identifier->value);
-
-						// the last token on the line, which should be a semicolon.
-						// this is used to check for extra types.
-						TToken *last = tarray_get(tokens, i+4);
-						char *last_string = string_get(last->value);
-						if(last->type != TTOKENTYPE_DELIMITER) {
-							printf("Error: Extra type \"%s\" in variable declaration on line %d, column %d\n", last_string, last->line, last->col);
-							exit(1);
-						}
 						
 						// find the variable's type
 						TToken *type = tarray_get(tokens, i+3);
@@ -91,6 +82,15 @@ TArray tparse_parse(TArray tokens) {
 							printf("Error: Missing type in variable declaration on line %d, column %d\n", type->line, type->col);
 							exit(1);
 						}
+
+						// the last token on the line, which should be a semicolon.
+						// this is used to check for extra types.
+						TToken *last = tarray_get(tokens, i+4);
+						char *last_string = string_get(last->value);
+						if(last->type != TTOKENTYPE_DELIMITER) {
+							printf("Error: Extra type \"%s\" in variable declaration on line %d, column %d\n", last_string, last->line, last->col);
+							exit(1);
+						}
 						
 						// the variable has no value
 						node->null = true;
@@ -104,15 +104,6 @@ TArray tparse_parse(TArray tokens) {
 						node->initialized = true;
 						
 						node->identifier = string_dup(identifier->value);
-
-						// the last token on the line, which should be a semicolon.
-						// this is used to check for extra types.
-						TToken *last = tarray_get(tokens, i+4);
-						char *last_string = string_get(last->value);
-						if(last->type != TTOKENTYPE_DELIMITER) {
-							printf("Error: Extra value \"%s\" in variable declaration on line %d, column %d\n", last_string, last->line, last->col);
-							exit(1);
-						}
 
 						// find the variable's type
 						TToken *value = tarray_get(tokens, i+3);
@@ -130,12 +121,21 @@ TArray tparse_parse(TArray tokens) {
 						} else if(strcmp(value_string, "false") == 0) {
 							node->var_type = TVARTYPE_BOOL;
 							node->value.b = false;
-						} else if(value_string[0] == '"') {
+						} else if(value->type == TTOKENTYPE_STRING_LITERAL) {
 							node->var_type = TVARTYPE_STRING;
 							node->value.s = string_dup(value->value);
 						// TODO: We should have a case for "invalid literals", but these theoretically do not exist. Until we implement variable lookups, they technically do, but are just identifiers. Therefore, the error will simply be wrong until we implement variable lookups.
 						} else {
 							printf("Error: Missing value in variable initialization on line %d, column %d\n", value->line, value->col);
+							exit(1);
+						}
+
+						// the last token on the line, which should be a semicolon.
+						// this is used to check for extra types.
+						TToken *last = tarray_get(tokens, i+4);
+						char *last_string = string_get(last->value);
+						if(last->type != TTOKENTYPE_DELIMITER) {
+							printf("Error: Extra value \"%s\" in variable declaration on line %d, column %d\n", last_string, last->line, last->col);
 							exit(1);
 						}
 
@@ -168,6 +168,12 @@ TArray tparse_parse(TArray tokens) {
 				break;
 			case TTOKENTYPE_LITERAL:
 				break;
+			case TTOKENTYPE_STRING_LITERAL:
+				if(token->col == 1) {
+					printf("Error: Expected statement at line %d, column %d\n", token->line, token->col);
+					exit(1);
+					break;
+				}
 			case TTOKENTYPE_IDENTIFIER:
 				// the only statement in Tori that starts with an identifier is a function call
 				break;
@@ -177,7 +183,7 @@ TArray tparse_parse(TArray tokens) {
 		}
 
 		// DEBUG: print the tokens
-		string_println(token->value);
+		// string_println(token->value);
 
 		string_free(token->value);
 		free(token_string);

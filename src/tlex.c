@@ -239,19 +239,69 @@ TArray tlex_lex(TString p) {
 	 * 5) add the newly constructed token to the array
 	*/
 
-	// lex through the string here
+	// actual lexing starts here
+
 	TString current_word = string_new("", 0);
 	int line = 1, col = 1;
+
 	bool is_comment = false;
 	bool is_block_comment = false;
 	bool is_string_literal = false;
+
+	TString string_buff;
+	int string_literal_line;
+	int string_literal_col;
+
 	// loops through all of the characters in the file
 	for(int i = 0; i < file_len; i++) {
 		char current = buff[i];
 
+		// start / stop string literals
+		if(current == '"' && !is_comment && !is_block_comment) {
+			if(is_string_literal) {
+				is_string_literal = false;
+
+				// make a string literal token and add it to the array
+				TToken *token = malloc(sizeof(TToken));
+
+				if(!token) {
+					terror_throw(TERRORTYPE_ALLOC_FAIL);
+				}
+
+				token->type = TTOKENTYPE_STRING_LITERAL;
+				token->value = string_dup(string_buff);
+				token->line = string_literal_line;
+				token->col = string_literal_col;
+
+				tarray_append(&out, token);
+
+				
+				string_free(string_buff);
+				continue;
+			} else {
+				is_string_literal = true;
+				string_literal_line = line;
+				string_literal_col = col;
+
+				string_buff = string_new("", 0);
+				continue;
+			}
+		}
+
+		// build string literal tokens here
+		if(is_string_literal) {
+			// check for open literal
+			if(current == '\n') {
+				printf("Error: Open string literal at line %d, column %d\n", string_literal_line, string_literal_col-1);
+				exit(1);
+			}
+
+			string_buff = string_append(string_buff, current);
+		}
+
 		// set states when a comment is detected
 		// TODO: implement errors for unfinished block comments
-		if(current == ':') {
+		if(!is_string_literal && current == ':') {
 			if(buff[i+1] == '*') {
 				is_block_comment = true;
 			} else if(buff[i-1] == '*') {
@@ -261,24 +311,14 @@ TArray tlex_lex(TString p) {
 				// without this, the final ":" would be tokenized
 				col++;
 				i++;
+				line++;
 				continue;
 			} else if(buff[i+1] == ':') {
 				is_comment = true;
 			}
 		}
 
-		// handle string literals
-		if(current == '"' && !is_comment && !is_block_comment) {
-			if(is_string_literal) {
-				// exit the string literal
-				is_string_literal = false;
-			} else {
-				// start / enter the string literal
-				is_string_literal = true;
-			}
-		}
-
-		if(!is_comment && !is_block_comment) {
+		if(!is_string_literal && !is_comment && !is_block_comment) {
 			bool is_whitespace = false;
 			bool is_delim = false;
 
@@ -337,8 +377,20 @@ TArray tlex_lex(TString p) {
 		if(current == '\n') {
 			col = 1;
 			is_comment = false;
+			is_string_literal = false;
 			line++;
 		}
+	}
+
+	if(is_block_comment) {
+		printf("Error: Open block comment at end of file\n");
+		exit(1);
+	}
+
+	// we have finished parsing the file, but are still in a string literal
+	if(is_string_literal) {
+		printf("Error: Open string literal at end of file\n");
+		exit(1);
 	}
 
 	// free the final word, as it gets recreated at the end of the if statement
