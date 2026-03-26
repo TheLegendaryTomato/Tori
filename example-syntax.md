@@ -77,7 +77,7 @@ var o : int;
 add, 1, 2, o;
 write, o;
 
-func print : int, char str[];
+func print : int;
 	var str[] : char;
 	param str;
 
@@ -86,22 +86,22 @@ endfunc;
 
 :: loops
 var tbl[] : int;
-var i : int = 0;
+var i, 0;
 for i < 10;
 	var out[] : char;
 	itostr, i, out;
 	write, out;
 
 	:: variables need manually incremented
-	i = i++;
+	set i, i+1;
 endloop;
 
-i = 0;
+set i, 0;
 while i != 11;
 	var out[] : char;
 	itostr, i, out;
 	write, out;
 
-	i = i++;
+	set i, i+1;
 endloop;
 ```

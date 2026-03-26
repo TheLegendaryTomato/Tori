@@ -30,6 +30,12 @@ typedef enum {
 	// Basically a `TASTNODETYPE_VAR_DECL`, but instead of giving the type, the user gives the value, and the parser infers the type.
 	TASTNODETYPE_VAR_INIT,
 
+	// A variable lookup, which is when the value of a variable needs to be read.
+	TASTNODETYPE_VAR_LOOKUP,
+
+	// This kind of node is used when a variable's value is changed to something different than its initial value.
+	TASTNODETYPE_VAR_SET,
+
 	// The first line of an "if" statement (the actual "if" part).
 	TASTNODETYPE_IF_INIT,
 	// The end of an "if" statement, signified by the `endif` keyword.
@@ -111,6 +117,45 @@ typedef struct {
 	int col;
 } TAstVarDefNode;
 
+// An AST node representing a variable lookup, which is when a variable's value needs to be read.
+typedef struct {
+	// What kind of node this is.
+	TAstNodeType node_type;
+
+	// The name of the variable being looked up.
+	TString identifier;
+
+	// The line the node was found on.
+	int line;
+	// The column the node was found on.
+	int col;
+} TAstVarLookupNode;
+
+typedef struct {
+	// What kind of node this is.
+	TAstNodeType node_type;
+
+	// The name of the variable who's value is to be changed.
+	TString identifier;
+
+	// The type the user is trying to set the variable to.
+	// This is mainly used for type checking.
+	TVarType var_type;
+
+	// The new value of the variable. This union defines a C value with a type corresponding to the type of the Tori variable.
+	union {
+		int i;
+		float f;
+		bool b;
+		TString s;
+	} value;
+
+	// The line the node was found on.
+	int line;
+	// The column the node was found on.
+	int col;
+} TAstVarSetNode;
+
 // An AST node representing an `end` statement.
 typedef struct {
 	// What kind of node this is.
@@ -135,24 +180,5 @@ typedef struct {
 	// The column the node was found on.
 	int col;
 } TAstIfNode;
-
-// An AST node representing an integer, float, bool, or string literal.
-typedef struct {
-	// What kind of node this is.
-	TAstNodeType node_type;
-
-	// The value of the literal. This union defines a C value with a type corresponding to the Tori type of the literal.
-	union {
-		int i;
-		float f;
-		bool b;
-		TString s;
-	} value;
-
-	// The line the node was found on.
-	int line;
-	// The column the node was found on.
-	int col;
-} TAstLiteralNode;
 
 #endif

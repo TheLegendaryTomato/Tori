@@ -4,7 +4,7 @@
  * Things to make that involve variables:
  * X Variable definitions
  * - Variable lookups (using variables in equations / other variables)
- * - Changing (or setting) variable values outside of definitions
+ * X Changing (or setting) variable values outside of definitions
  *
  * Errors involving variables:
  * X Improper operators
@@ -15,12 +15,13 @@
  * X Missing identifier
  * X Incorrect identifier
  * - Invalid variable lookup (nonexistant variable) (also applies when setting vars)
- * - Type mismatch when setting variables
- * - Type mismatch during lookups
+ * - Type mismatch when setting variables (interpreter)
+ * - Type mismatch during lookups (interpreter)
  * - Attempt to make a new variable with the same name as an existing one (handle this in the interpreter?)
+ * X Attempt to use an identifier as a variable identifier
  *
  * General errors:
- * - Missing semicolons
+ * X Missing semicolons
  * - Unexpected tokens outside of statements (i.e. a random character on its own line)
  * X Unfinished string literals
  * X Unfinished block comments
@@ -38,20 +39,35 @@ var x, 5.5;
 var y, true;
 var z, "test of string literal";
 
+:: Variable setting tests
+set a, 15;
+set b, 9.87;
+set c, false;
+set d, "test of set instruction";
+
 :: Error tests (comment out if not testing errors)
+
+:: missing semicolon
+::var j : int
 
 :: extra identifier / type / value
 ::var e f : int;
 ::var f : int int;
 ::var g, 10 10;
+::set a b, 10;
 
 :: missing type / value
 ::var h : ;
 ::var i, ;
+::set a, ;
 
 :: missing identifier
 ::var , 10;
 ::var : int;
+::set , 10;
 
 :: open string literal
 ::var z2, "test of string literal pt 2;
+
+:: "set" type mismatch (needs implemented with the interpreter)
+::set a, 9.87;

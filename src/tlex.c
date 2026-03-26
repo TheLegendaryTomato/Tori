@@ -15,7 +15,12 @@
 // Every keyword in Tori.
 const char *keywords[] = {
 	"var",
-	"int"
+	"set",
+
+	"int",
+	"float",
+	"bool",
+	"string"
 };
 
 // Common whitespace characters.
@@ -133,7 +138,6 @@ TTokenType GetTokenType(TString s) {
 	}
 
 	// check for literal
-	// TODO: we need a way to check for string literals
 	if(
 		strcmp(str, "true") == 0 ||
 		strcmp(str, "false") == 0 ||
@@ -300,7 +304,6 @@ TArray tlex_lex(TString p) {
 		}
 
 		// set states when a comment is detected
-		// TODO: implement errors for unfinished block comments
 		if(!is_string_literal && current == ':') {
 			if(buff[i+1] == '*') {
 				is_block_comment = true;
@@ -350,8 +353,7 @@ TArray tlex_lex(TString p) {
 				// reset current_word
 				current_word = string_new("", 0);
 			} else if(is_delim) {
-				// this implementation is the same as whitespace, with the addition of the delimiter tokem
-
+				// this implementation is the same as whitespace, with the addition of the delimiter token
 				if(string_len(current_word) > 0) {
 					token = CreateToken(current_word, line, col - string_len(current_word));
 					tarray_append(&out, token);
@@ -375,6 +377,15 @@ TArray tlex_lex(TString p) {
 
 		// advance the line tracker
 		if(current == '\n') {
+			// conditions for missing semicolon:
+			// - not in a comment
+			// - the line is not empty (buff[i-1] != '\n' checks for this)
+			// then, the buff[i-1] != ';' checks for the missing semicolon
+			if(buff[i-1] != '\n' && !is_comment && !is_block_comment && buff[i-1] != ';') {
+				printf("Error: Missing semicolon on line %d\n", line);
+				exit(1);
+			}
+
 			col = 1;
 			is_comment = false;
 			is_string_literal = false;
