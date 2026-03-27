@@ -222,6 +222,16 @@ TArray tlex_lex(TString p) {
 	fread(buff, 1, file_len, file);
 	buff[file_len] = '\0';
 
+	// normalize carriage returns through removal
+	int j = 0;
+	for(int i = 0; i < file_len; i++) {
+		if(buff[i] != '\r') {
+			buff[j++] = buff[i];
+		}
+	}
+	file_len = j;
+	buff[file_len] = '\0';
+
 	// the array that tokens will be wrote to
 	TArray out = tarray_new(1);
 

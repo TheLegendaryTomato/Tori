@@ -14,10 +14,10 @@
  * X Missing type / value
  * X Missing identifier
  * X Incorrect identifier
- * - Invalid variable lookup (nonexistant variable) (also applies when setting vars)
+ * - Invalid variable lookup (nonexistant variable) (interpreter)
  * - Type mismatch when setting variables (interpreter)
  * - Type mismatch during lookups (interpreter)
- * - Attempt to make a new variable with the same name as an existing one (handle this in the interpreter?)
+ * - Attempt to make a new variable with the same name as an existing one (interpreter)
  * X Attempt to use an identifier as a variable identifier
  *
  * General errors:
